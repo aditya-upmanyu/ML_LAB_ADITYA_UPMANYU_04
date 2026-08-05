@@ -54,4 +54,92 @@ df = pd.read_csv(file_path)
 print("Dataset Shape:", df.shape)
 print("\nFirst 5 rows:")
 print(df.head())
+
+Here are the common **Pandas DataFrame commands** used for quick data exploration and inspection, along with what they do:
+
+---
+
+### 1. Data Preview Commands
+
+* `df.head()`
+* **Use:** Displays the **first 5 rows** of the DataFrame.
+* **Customization:** Pass a number inside to view more or fewer rows (e.g., `df.head(10)` shows the first 10 rows).
+* **Example:**
+```python
+df.head()
+
+```
+
+
+
+
+* `df.tail()`
+* **Use:** Displays the **last 5 rows** of the DataFrame.
+* **Customization:** Pass a number inside to adjust (e.g., `df.tail(10)` shows the last 10 rows).
+* **Example:**
+```python
+df.tail()
+
+```
+
+
+
+
+
+---
+
+### 2. Data Structure & Information
+
+* `df.info()`
+* **Use:** Provides a **high-level summary** of the DataFrame:
+* Total number of rows (entries) and columns.
+* Column names.
+* Count of non-null (non-missing) values per column.
+* Data types (`int64`, `float64`, `object`, etc.) of each column.
+* Total memory usage of the DataFrame.
+
+
+* **Example:**
+```python
+df.info()
+
+```
+
+
+
+
+
+---
+
+### 3. Other Useful Quick Inspection Commands
+
+* `df.shape`
+* **Use:** Returns a tuple with `(total_rows, total_columns)`.
+* **Example:**
+```python
+print(df.shape)  # Output example: (336749, 65)
+
+```
+
+
+
+
+* `df.describe()`
+* **Use:** Calculates **statistical summaries** (mean, std, min, max, percentiles) for all numerical columns.
+* **Example:**
+```python
+df.describe()
+
+```
+
+
+
+
+* `df.columns`
+* **Use:** Returns a list/Index of all column names in the dataset.
+* **Example:**
+```python
+print(df.columns)
+
+```
 ```
