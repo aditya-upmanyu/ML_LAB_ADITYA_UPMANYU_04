@@ -44,5 +44,14 @@ print(df.head())
 # 3. Click the Upload icon and select your file (e.g., StealthPhisher2025.csv).
 # 4. Right-click the uploaded file in Colab, click Copy path, and paste it into pd.read_csv(...).
 # 5. Run the code cell!
+#with google drive mount
+import pandas as pd
+from google.colab import drive
 
+drive.mount('/content/drive')
+file_path = '/content/drive/MyDrive/StealthPhisher2025.csv'
+df = pd.read_csv(file_path) 
+print("Dataset Shape:", df.shape)
+print("\nFirst 5 rows:")
+print(df.head())
 ```
