@@ -1,3 +1,9 @@
+#not copmpleted
 1.FACTORIAL
 2.FIBONACCI SERIES 
 WITH RECURSION 
+3.read data from dataset 
+import pandas as pd 
+df for daa frame 
+df = pd read csv file and its path
+print(dF)
