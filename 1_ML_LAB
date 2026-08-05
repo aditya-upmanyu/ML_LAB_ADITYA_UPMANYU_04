@@ -1,0 +1,48 @@
+```python
+# 1. Factorial Program
+def factorial(n):
+    if n < 0:
+        return "Factorial is not defined for negative numbers."
+    result = 1
+    for i in range(1, n + 1):
+        result *= i
+    return result
+
+num = 5
+print(f"Factorial of {num} is: {factorial(num)}")
+
+
+# 2. Fibonacci Series (Using Recursion)
+def fibonacci_recursive(n):
+    if n <= 0:
+        return 0
+    elif n == 1:
+        return 1
+    else:
+        return fibonacci_recursive(n - 1) + fibonacci_recursive(n - 2)
+
+terms = 10
+print(f"Fibonacci Series up to {terms} terms:")
+for i in range(terms):
+    print(fibonacci_recursive(i), end=" ")
+print()
+
+
+# 3. Read Data from Dataset using Pandas (Google Colab)
+import pandas as pd
+
+file_path = '/content/StealthPhisher2025.csv'
+df = pd.read_csv(file_path)
+
+print("First 5 rows of the dataset:")
+print(df.head())
+
+
+# Steps to Run in Google Colab:
+# 1. Open Google Colab and open a new notebook.
+# 2. Click on the Folder icon (Files tab) on the left sidebar.
+# 3. Click the Upload icon and select your file (e.g., StealthPhisher2025.csv).
+# 4. Right-click the uploaded file in Colab, click Copy path, and paste it into pd.read_csv(...).
+# 5. Run the code cell!
+
+```
