@@ -1,0 +1,110 @@
+Aaj ki class me humne **`matplotlib.pyplot`** (jise standard `import matplotlib.pyplot as plt` ke saath import karte hain) aur Pandas ke **`df.plot()`** ka use karke dataset ko alag-alag tarike se visualize kiya.
+
+Niche saare plotting functions ke detailed notes aur Hinglish comments diye gaye hain:
+
+---
+
+## Matplotlib / Pandas Plotting Cheat Sheet
+
+### 1. Library Import Karna
+
+Visualization start karne ke liye sabse pehle `matplotlib.pyplot` ko import karte hain:
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+
+```
+
+---
+
+### 2. Line Plot (Overall Data Trends)
+
+Bina kisi type ke direct `df.plot()` chalane par default Line Plot banta hai.
+
+```python
+# Pure DataFrame ko line chart par display karna
+df.plot()
+
+# Title aur Axes Label set karna
+plt.title("Overall Data Trends")
+plt.xlabel("Index / Row Number")
+plt.ylabel("Values")
+
+# Graph ko display karna
+plt.show()
+
+```
+
+---
+
+### 3. Bar Plot (Categorical vs Numerical Data)
+
+Jab aapko 2 variables (jaise `Age` aur `Salary`) ke values compare karne hon:
+
+```python
+# Age ke basis par Salary ka Bar Graph
+df.plot(kind='bar', x='Age', y='Salary', color='skyblue', title='Salary by Age')
+
+plt.xlabel('Age')
+plt.ylabel('Salary')
+plt.show()
+
+```
+
+---
+
+### 4. Histogram (Distribution & Frequency)
+
+Jab kisi single continuous numeric feature (jaise `marks`) ki frequency/range check karni ho:
+
+```python
+# Marks ka distribution check karna
+df['marks'].plot(kind='hist', bins=5, color='purple', edgecolor='black', title='Marks Distribution')
+
+plt.xlabel('Marks')
+plt.ylabel('Frequency')
+plt.show()
+
+```
+
+---
+
+### 5. Box Plot (Spread & Outliers)
+
+Data ki min, max, median aur outliers check karne ke liye:
+
+```python
+# Specific columns (Age & marks) ka Box Plot
+df[['Age', 'marks']].plot(kind='box', title='Age & Marks Box Plot')
+plt.show()
+
+```
+
+---
+
+### 6. Scatter Plot (Relationship Between Two Features)
+
+Jab 2 numeric columns ke beech correlation/pattern dekhna ho:
+
+```python
+# Marks vs Salary ka Scatter Plot
+df.plot(kind='scatter', x='marks', y='Salary', color='red', title='Marks vs Salary Scatter Plot')
+
+plt.xlabel('Marks')
+plt.ylabel('Salary')
+plt.show()
+
+```
+
+---
+
+### Key Commands Summary:
+
+| Command | Usage (Hinglish) |
+| --- | --- |
+| `import matplotlib.pyplot as plt` | Plotting module ko `plt` ke short-form name se import karta hai |
+| `df.plot(kind='type')` | Chart type define karta hai (`'bar'`, `'hist'`, `'box'`, `'scatter'`) |
+| `plt.title("Name")` | Graph ke upar title set karta hai |
+| `plt.xlabel() / plt.ylabel()` | X aur Y axis par text-labels lagata hai |
+| `plt.show()` | Graph ko Colab screen par clearly render/render karta hai |
