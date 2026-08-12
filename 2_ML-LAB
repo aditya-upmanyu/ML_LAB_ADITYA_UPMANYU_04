@@ -9,3 +9,73 @@
 7	108.0	24.0	61.000	68000.0
 8	0.0	21.0	62.000	61000.0
 9	110.0	26.0	63.000	55000.0
+Aaj ki lab class ke saare steps aur commands ke detailed notes neeche diye gaye hain, jisme har line ke saath **Hinglish comments** hain taaki samajhne me aasaani ho:
+
+---
+
+## ML Lab: Dataset Preprocessing & Missing Values Handling
+
+### 1. Dataset Read karna (Excel File Load)
+
+Pehle steps me humne Excel file (`mllab2.xlsx`) ko Pandas DataFrame me load kiya:
+
+```python
+import pandas as pd
+
+# pd.read_excel() ka use karke Excel file ko Colab me load kar rahe hain
+df = pd.read_excel("mllab2.xlsx")
+
+# Dataset ka table format display karne ke liye
+display(df)
+
+```
+
+---
+
+### 2. Missing Values (NaN) Check karna
+
+Data me kahan-kahan values missing hain, wo check karne ke liye:
+
+```python
+# True matlb missing/NaN value hai, False matlb valid value hai
+display(df.isnull())
+
+# Column-wise total kitne missing values hain unka count dekhne ke liye
+print(df.isnull().sum())
+
+```
+
+---
+
+### 3. Missing Values Replace karna (Custom Rules)
+
+Humne **`ID` column me missing values ki jagah `0**` fill kiya aur **baaki saare columns (`Age`, `marks`, `Salary`) me unka respective Column Mean** fill kiya:
+
+```python
+import pandas as pd
+
+# Step 1: Excel file read karein
+df = pd.read_excel("mllab2.xlsx")
+
+# Step 2: Sirf 'ID' column ke missing (NaN) values ko 0 se replace karein
+df['ID'] = df['ID'].fillna(0)
+
+# Step 3: Baaki bache numeric columns ke NaN values ko unhi ke column mean se replace karein
+df = df.fillna(df.mean(numeric_only=True))
+
+# Step 4: Final updated dataset print / display karein
+display(df)
+
+```
+
+---
+
+### Quick Reference Commands:
+
+| Command | Hindi/Hinglish Me Matlab |
+| --- | --- |
+| `pd.read_excel("filename.xlsx")` | `.xlsx` Excel file ko Pandas DataFrame me read karna |
+| `df.isnull()` | Dataset me kahan NaN (Null) values hain unhe `True`/`False` me check karna |
+| `df['Col'].fillna(0)` | Kisi specific column ke missing values me `0` bharna |
+| `df.fillna(df.mean(numeric_only=True))` | Sabhi numeric columns me unka apna Column Mean fill karna |
+| `df.apply(lambda row: row.fillna(row.mean()), axis=1)` | Row-wise har row ka mean nikal kar missing value fill karna |
