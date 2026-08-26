@@ -1,280 +1,419 @@
-'''
-import pandas as pd
-df = pd.read_csv('/content/california_housing_train.csv')
-import pandas as pd
-import matplotlib.pyplot as plt
+# Linear Regression — Code Notes (Hinglish)
 
-df = pd.read_csv('/content/california_housing_train.csv')
+## Part 1: Import Libraries
 
-# scatter plot 
-plt.scatter(df['housing_median_age'], df['total_rooms'])
-# x par houseing median age y par total rooms 
-plt.xlabel('Housing Median Age')
-plt.ylabel('Total Rooms')
-#title hosing median age vs total rooms data plot 
-plt.title('Housing Median Age vs Total Rooms')
-plt.show()
-#"California ke houses ka median age dekhkar total rooms predict karna hai."
+```python
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
+```
 
+### Theory
+
+```python
+# pandas:
+# Dataset ko read aur handle karne ke liye use hota hai.
+
+# matplotlib:
+# Graphs aur visualization banane ke liye use hota hai.
+
+# LinearRegression:
+# Scikit-learn ka Linear Regression model import kar rahe hain.
+```
+
+---
+
+## Part 2: Load Dataset
+
+```python
 df = pd.read_csv('/content/california_housing_train.csv')
+```
 
-# X = Feature
-X = df[['housing_median_age']]
+### Theory
 
-# y = Target
-y = df['total_rooms']
+```python
+# CSV file ko read karke DataFrame 'df' mein store kar rahe hain.
+# DataFrame ko hum dataset ki tarah use karenge.
+```
 
-# Model
+---
+
+## Part 3: Feature (X) and Target (y)
+
+```python
+# X = Feature/Input
+# Longitude ko input feature bana rahe hain.
+X = df[['longitude']]
+
+# y = Target/Output
+# Latitude ko target/output bana rahe hain.
+y = df['latitude']
+```
+
+### Theory
+
+```python
+# Feature:
+# Feature woh input variable hota hai jiske basis par
+# model prediction karta hai.
+
+# Target:
+# Target woh output variable hota hai jise model predict karna seekhta hai.
+
+# Yahan:
+# X = Longitude
+# y = Latitude
+#
+# Model ka kaam:
+# Longitude ke basis par Latitude predict karna.
+```
+
+---
+
+## Part 4: Create Linear Regression Model
+
+```python
 model = LinearRegression()
+```
 
-# Fit model
+### Theory
+
+```python
+# LinearRegression() ek Linear Regression model create karta hai.
+# Abhi model ne dataset se kuch nahi seekha hai.
+```
+
+---
+
+## Part 5: Train / Fit the Model
+
+```python
 model.fit(X, y)
+```
 
-# Scatter plot
-plt.scatter(X, y)
+### Theory
 
-# Regression line {Matlab: actual data ke dots ke upar model ki best-fit regression line draw kar rahe ho.}
-plt.plot(X, model.predict(X), color='red')
-#woh Linear Regression ki best-fit/prediction line thi.
+```python
+# fit() model ko X aur y ka relationship sikhata hai.
+#
+# Model dataset ke points ko analyse karta hai
+# aur unke through ek best-fit straight line find karta hai.
+#
+# Simple flow:
+#
+# Longitude (X)
+#       ↓
+# Linear Regression
+#       ↓
+# Latitude (y)
+```
 
-plt.xlabel('Housing Median Age')
-plt.ylabel('Total Rooms')
-plt.title('Housing Median Age vs Total Rooms')
+---
 
+## Part 6: Prediction
+
+```python
+prediction = model.predict(X)
+```
+
+### Theory
+
+```python
+# predict() trained model ki help se predicted values generate karta hai.
+#
+# Yahan model har Longitude ke liye
+# predicted Latitude calculate karega.
+#
+# prediction = model ki estimated Latitude values
+```
+
+---
+
+# Part 7: Scatter Plot
+
+```python
+plt.scatter(X, y, color='blue', alpha=0.3)
+```
+
+### Theory
+
+```python
+# Scatter plot actual data points ko dots ke form mein show karta hai.
+#
+# X-axis  → Longitude
+# Y-axis  → Latitude
+#
+# Blue dots = Actual dataset values
+#
+# alpha=0.3 ka matlab dots ko thoda transparent banana.
+```
+
+---
+
+# Part 8: Regression Line
+
+```python
+plt.plot(X, prediction, color='red')
+```
+
+### Theory
+
+```python
+# Red line Linear Regression ki best-fit/prediction line hai.
+#
+# Blue dots = Actual values
+# Red line  = Model ki predicted values
+#
+# Ye line actual data ke overall linear relationship ko represent karti hai.
+```
+
+---
+
+# Part 9: Graph Labels
+
+```python
+plt.xlabel('Longitude')
+plt.ylabel('Latitude')
+plt.title('Longitude vs Latitude')
+```
+
+### Theory
+
+```python
+# xlabel() → X-axis ka naam
+# ylabel() → Y-axis ka naam
+# title()  → Graph ka title
+```
+
+---
+
+# Part 10: 99th Percentile
+
+```python
+x_limit = df['longitude'].quantile(0.99)
+y_limit = df['latitude'].quantile(0.99)
+```
+
+### Theory
+
+```python
+# Outlier:
+# Outlier ek aisi value hoti hai jo baaki data ke comparison
+# mein bahut zyada extreme hoti hai.
+#
+# quantile(0.99):
+# Dataset ki 99th percentile value find karta hai.
+#
+# Iska use extreme values ko identify/filter karne ke liye
+# kiya ja sakta hai.
+#
+# Approximately top 1% values 99th percentile ke upar hoti hain.
+```
+
+---
+
+# Part 11: Remove / Filter Outliers
+
+```python
+df_clean = df[
+    (df['longitude'] < x_limit) &
+    (df['latitude'] < y_limit)
+]
+```
+
+### Theory
+
+```python
+# df_clean ek naya DataFrame hai jisme filtered data store hoga.
+#
+# Condition 1:
+# longitude < x_limit
+# → Longitude limit se kam honi chahiye.
+#
+# Condition 2:
+# latitude < y_limit
+# → Latitude limit se kam honi chahiye.
+#
+# & ka matlab:
+# Dono conditions TRUE honi chahiye.
+#
+# Original df delete/change nahi hota.
+# Filtered data df_clean mein store hota hai.
+```
+
+---
+
+# Part 12: Clean Data ka X and y
+
+```python
+x_clean = df_clean[['longitude']]
+y_clean = df_clean['latitude']
+```
+
+### Theory
+
+```python
+# Ab filtered/clean dataset se dobara X aur y bana rahe hain.
+#
+# x_clean = Clean Longitude
+# y_clean = Clean Latitude
+#
+# Ab hum clean data par Linear Regression dobara train karenge.
+```
+
+---
+
+# Part 13: Clean Data par New Model
+
+```python
+model_clean = LinearRegression()
+
+model_clean.fit(x_clean, y_clean)
+```
+
+### Theory
+
+```python
+# Outliers filter karne ke baad naya Linear Regression model create kar rahe hain.
+#
+# model_clean.fit() clean data ka relationship learn karta hai.
+#
+# Isse hum compare kar sakte hain ki
+# outliers remove karne ke baad regression line mein kya change aaya.
+```
+
+---
+
+# Part 14: Clean Data Prediction
+
+```python
+prediction_clean = model_clean.predict(x_clean)
+```
+
+### Theory
+
+```python
+# Clean dataset ke liye predicted Latitude calculate kar rahe hain.
+#
+# prediction_clean = clean data ki predicted values
+```
+
+---
+
+# Part 15: Subplot
+
+```python
+plt.figure(figsize=(12, 5))
+
+plt.subplot(1, 2, 1)
+```
+
+### Theory
+
+```python
+# subplot() ek hi figure ke andar multiple graphs banane ke liye use hota hai.
+#
+# subplot(1, 2, 1) ka matlab:
+#
+# 1 row
+# 2 columns
+# 1st graph
+#
+# Isliye pehla graph left side mein aayega.
+```
+
+---
+
+# Part 16: Original Data Graph
+
+```python
+plt.scatter(X, y, color='blue', alpha=0.3)
+plt.plot(X, prediction, color='red')
+
+plt.xlabel('Longitude')
+plt.ylabel('Latitude')
+plt.title('Original Data')
+```
+
+### Theory
+
+```python
+# Is graph mein original dataset use ho raha hai.
+#
+# Blue dots:
+# Original/actual data
+#
+# Red line:
+# Original data par trained Linear Regression ki line.
+```
+
+---
+
+# Part 17: Clean Data Graph
+
+```python
+plt.subplot(1, 2, 2)
+
+plt.scatter(x_clean, y_clean, color='blue', alpha=0.3)
+plt.plot(x_clean, prediction_clean, color='red')
+
+plt.xlabel('Longitude')
+plt.ylabel('Latitude')
+plt.title('After Removing Outliers')
+```
+
+### Theory
+
+```python
+# subplot(1, 2, 2):
+# Second graph ko right side mein banata hai.
+#
+# Blue dots:
+# Outliers filter karne ke baad ka data.
+#
+# Red line:
+# Clean data par trained Linear Regression ki line.
+```
+
+---
+
+# Part 18: Display Graph
+
+```python
+plt.tight_layout()
 plt.show()
-#notes 
-# 1. `model = LinearRegression()` → Linear Regression ka model banate hain.
-# 2.`model.fit(X, y)`→ Model ko X aur y ka relationship sikhate hain.
-# 3. `model.predict(X)` → X ke basis par y ki predicted values nikalte hain.
+```
+
+### Theory
+
+```python
+# tight_layout():
+# Dono graphs ke labels aur spacing ko properly adjust karta hai.
+
+# show():
+# Final graphs ko screen par display karta hai.
+```
+
+---
+
+# Complete Code
+
+```python
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 
 
-# ---------------------------------------------------------
-# STEP 1: Load the dataset
-# ---------------------------------------------------------
+# =========================================================
+# PART 1: LOAD DATASET
+# =========================================================
 
 # CSV file ko read karke DataFrame mein store kar rahe hain
 df = pd.read_csv('/content/california_housing_train.csv')
 
 
-# ---------------------------------------------------------
-# STEP 2: Select Feature (X) and Target (y)
-# ---------------------------------------------------------
-
-# X = Feature/Input
-# Hum housing_median_age ko input feature bana rahe hain
-X = df[['housing_median_age']]
-
-# y = Target/Output
-# Hum total_rooms ko predict karna chahte hain
-y = df['total_rooms']
-
-
-# ---------------------------------------------------------
-# STEP 3: Create Linear Regression Model
-# ---------------------------------------------------------
-
-# Linear Regression ka model create kar rahe hain
-model = LinearRegression()
-
-# Model ko X aur y ka relationship sikhate hain
-# Yaani housing_median_age ke basis par total_rooms predict karna
-# seekh raha hai
-model.fit(X, y)
-
-
-# ---------------------------------------------------------
-# STEP 4: Find Outliers using 99th Percentile
-# ---------------------------------------------------------
-
-# Outlier:
-# Outlier ek aisi value hoti hai jo baaki data ke comparison
-# mein bahut zyada extreme hoti hai.
-#
-# Outliers ki wajah se graph ka scale distort ho sakta hai.
-#
-# 99th percentile:
-# quantile(0.99) data ki 99th percentile value find karta hai.
-# Iska matlab approximately top 1% extreme values is limit
-# se upar hongi.
-#
-# Original data delete nahi hota.
-# Abhi hum sirf X aur Y ki limits calculate kar rahe hain.
-
-x_limit = df['housing_median_age'].quantile(0.99)
-y_limit = df['total_rooms'].quantile(0.99)
-
-
-# ---------------------------------------------------------
-# STEP 5: Plot the Original Data
-# ---------------------------------------------------------
-
-# Actual data points ko blue dots ke form mein show kar rahe hain
-plt.scatter(X, y, color='blue')
-
-# Linear Regression ki predicted values ke basis par
-# best-fit/prediction line draw kar rahe hain
-plt.plot(X, model.predict(X), color='red')
-
-
-# ---------------------------------------------------------
-# STEP 6: Set Graph Limits
-# ---------------------------------------------------------
-
-# X-axis ki maximum limit 99th percentile tak set kar rahe hain
-# Isse extreme X values graph mein visible nahi hongi
-plt.xlim(0, x_limit)
-
-# Y-axis ki maximum limit 99th percentile tak set kar rahe hain
-# Isse extreme Y values graph mein visible nahi hongi
-plt.ylim(0, y_limit)
-
-
-# Graph ke X-axis ka naam
-plt.xlabel('Housing Median Age')
-
-# Graph ke Y-axis ka naam
-plt.ylabel('Total Rooms')
-
-# Graph ka title
-plt.title('Housing Median Age vs Total Rooms')
-
-# Graph ko display karna
-plt.show()
-
-
-# ---------------------------------------------------------
-# STEP 7: Correlation
-# ---------------------------------------------------------
-
-# Correlation:
-# Correlation do variables/features ke beech relationship
-# ko measure karta hai.
-#
-# Ye batata hai ki ek variable ke change hone par doosra
-# variable kis direction mein aur kitna related hai.
-#
-# Correlation ki value -1 se +1 ke beech hoti hai:
-#
-# +1 -> Perfect positive correlation
-#  0 -> No linear correlation
-# -1 -> Perfect negative correlation
-#
-# Positive correlation:
-# Ek variable badhta hai to doosra bhi generally badhta hai.
-#
-# Negative correlation:
-# Ek variable badhta hai to doosra generally decrease hota hai.
-#
-# Correlation 0 ke close ho to linear relationship weak hota hai.
-#
-# Feature ke context mein:
-# Feature (X) aur Target (y) ke beech correlation dekhkar
-# hum samajh sakte hain ki feature target ke saath kitna related hai.
-#
-# Important:
-# Correlation relationship batata hai, lekin ye prove nahi karta
-# ki ek variable doosre variable ka cause hai.
-
-
-# ---------------------------------------------------------
-# STEP 8: Remove/Filter Outliers
-# ---------------------------------------------------------
-
-# df_clean mein sirf woh rows rakhenge jahan:
-#
-# 1. housing_median_age < x_limit
-# AND
-# 2. total_rooms < y_limit
-#
-# '&' ka matlab hai dono conditions TRUE honi chahiye.
-#
-# Isse 99th percentile se upar ki extreme values filter ho jayengi.
-# Original df change nahi hoga; filtered data df_clean mein milega.
-
-df_clean = df[
-    (df['housing_median_age'] < x_limit) &
-    (df['total_rooms'] < y_limit)
-]
-
-
-# df_clean mein filtered data check kar sakte hain
-print(df_clean)# X = Feature/Input
-# Longitude ko X-axis par le rahe hain
-X = df[['longitude']]
-
-# y = Target/Output
-# Latitude ko Y-axis par le rahe hain
-y = df['latitude']
-
-
-# Linear Regression model create karna
-model = LinearRegression()
-
-# Longitude aur Latitude ka relationship model ko sikhana
-model.fit(X, y)
-
-
-# 99th percentile limits find karna
-x_limit = df['longitude'].quantile(0.99)
-y_limit = df['latitude'].quantile(0.99)
-
-
-# Actual data ko blue dots mein show karna
-plt.scatter(X, y, color='blue')
-
-# Model ki predicted values ki red regression line
-plt.plot(X, model.predict(X), color='red')
-
-
-# Graph ki limits set karna
-#plt.xlim(0, x_limit)
-#plt.ylim(0, y_limit)
-
-plt.xlabel('Longitude')
-plt.ylabel('Latitude')
-plt.title('Longitude vs Latitude')
-
-#plt.show()
-
-
-# Outliers ko filter karke naya DataFrame banana
-# Sirf wahi rows rakhenge jahan longitude aur latitude
-# dono apni 99th percentile limit se kam hain
-
-
-plt.show()# 99th percentile limits find karna
-x_limit = df['longitude'].quantile(0.99)
-y_limit = df['latitude'].quantile(0.99)
-
-df_clean = df[
-    (df['longitude'] < x_limit) &
-    (df['latitude'] < y_limit)
-]
-x_clen = df_clean[['longitude']]
-y_clen = df_clean['latitude']
-model = LinearRegression()
-model.fit(x_clen, y_clen)
-plt.scatter(x_clen, y_clen, color='red')
-plt.plot(x_clen, model.predict(x_clen), color='yellow')
-plt.xlabel('Longitude')
-plt.ylabel('Latitude')
-plt.title('Longitude vs Latitude')
-
-plt.show()import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.linear_model import LinearRegression
-
-df = pd.read_csv('/content/california_housing_train.csv')
-
-
 # =========================================================
-# 1. ORIGINAL DATA - Prediction
+# PART 2: FEATURE AND TARGET
 # =========================================================
 
 # X = Feature/Input
@@ -285,44 +424,71 @@ X = df[['longitude']]
 # Latitude ko target bana rahe hain
 y = df['latitude']
 
+
+# =========================================================
+# PART 3: LINEAR REGRESSION MODEL
+# =========================================================
+
 # Linear Regression model create karna
 model = LinearRegression()
 
-# Longitude aur Latitude ka relationship model ko sikhana
+# Model ko Longitude aur Latitude ka relationship sikhana
 model.fit(X, y)
 
-# Original data ki prediction
+
+# =========================================================
+# PART 4: PREDICTION
+# =========================================================
+
+# Trained model se Latitude ki predicted values nikalna
 prediction = model.predict(X)
 
 
 # =========================================================
-# 2. OUTLIERS FILTER KARNA
+# PART 5: 99th PERCENTILE / OUTLIERS
 # =========================================================
 
-# 99th percentile limits find karna
+# Longitude ki 99th percentile limit
 x_limit = df['longitude'].quantile(0.99)
+
+# Latitude ki 99th percentile limit
 y_limit = df['latitude'].quantile(0.99)
 
-# Sirf woh rows rakhna jahan longitude aur latitude
-# dono apni 99th percentile limit se kam hain
+
+# =========================================================
+# PART 6: FILTER OUTLIERS
+# =========================================================
+
+# Sirf woh rows rakhenge jahan:
+# Longitude x_limit se kam ho
+# AND
+# Latitude y_limit se kam ho
+
 df_clean = df[
     (df['longitude'] < x_limit) &
     (df['latitude'] < y_limit)
 ]
 
-# Clean data se X aur y banana
+
+# =========================================================
+# PART 7: CLEAN DATA
+# =========================================================
+
+# Clean data ka Feature
 x_clean = df_clean[['longitude']]
+
+# Clean data ka Target
 y_clean = df_clean['latitude']
 
 
 # =========================================================
-# 3. CLEAN DATA PAR NAYA MODEL
+# PART 8: NEW MODEL ON CLEAN DATA
 # =========================================================
 
-# Clean data ke liye Linear Regression model
+# Clean data ke liye naya Linear Regression model
 model_clean = LinearRegression()
 
-# Clean data par model ko train karna
+# Clean data par model train karna
 model_clean.fit(x_clean, y_clean)
 
 # Clean data ki prediction
@@ -330,21 +496,22 @@ prediction_clean = model_clean.predict(x_clean)
 
 
 # =========================================================
-# 4. SUBPLOT
+# PART 9: SUBPLOT
 # =========================================================
 
-# 1 row aur 2 columns mein 2 graphs banana
+# Figure ka size set karna
 plt.figure(figsize=(12, 5))
 
 
 # ---------------- ORIGINAL DATA ----------------
 
+# First subplot
 plt.subplot(1, 2, 1)
 
 # Original actual data
 plt.scatter(X, y, color='blue', alpha=0.3)
 
-# Original data ki regression line
+# Original regression line
 plt.plot(X, prediction, color='red')
 
 plt.xlabel('Longitude')
@@ -354,6 +521,7 @@ plt.title('Original Data')
 
 # ---------------- CLEAN DATA ----------------
 
+# Second subplot
 plt.subplot(1, 2, 2)
 
 # Outliers filter karne ke baad actual data
@@ -367,8 +535,19 @@ plt.ylabel('Latitude')
 plt.title('After Removing Outliers')
 
 
-# Dono graphs ko properly adjust karna
+# Graphs ki spacing adjust karna
 plt.tight_layout()
 
 # Graph show karna
 plt.show()
+```
+
+## One-Line Revision 🧠
+
+```text
+Dataset → X/y select → Model create → fit() → predict()
+        → 99% limit → Outliers filter → New model
+        → Original vs Clean Data subplot
+```
+
+**Important:** `df_clean` banana **data filtering** hai, jabki `plt.xlim()` / `plt.ylim()` sirf **graph ki visible range** change karte hain.
