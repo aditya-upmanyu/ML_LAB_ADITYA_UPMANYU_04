@@ -153,3 +153,5 @@ plt.ylabel("Actual Values")
 plt.title("Actual vs Predicted with Regression Line")
 
 plt.show()
+________________________________________________________________
+The final Actual vs Predicted plot helps us visually compare the model's predicted values with the actual target values. Points closer to the regression line indicate better predictions, while points farther from the line indicate higher prediction errors.
