@@ -89,3 +89,67 @@ Predicted Values + Actual Values
 ```
 
 '''
+_____________________________________
+from sklearn.linear_model import LinearRegression
+
+model = LinearRegression()
+model.fit(X, y)
+
+import matplotlib.pyplot as plt
+
+# Actual vs Predicted values
+plt.scatter(y, model.predict(X))
+
+# Reference line: y = x
+plt.plot(
+    [y.min(), y.max()],
+    [y.min(), y.max()]
+)
+
+plt.xlabel("Actual Values")
+plt.ylabel("Predicted Values")
+plt.title("Actual vs Predicted Values")
+
+plt.show()
+_______________________________
+import matplotlib.pyplot as plt
+
+# Predicted values
+y_pred = model.predict(X)
+
+# Actual vs Predicted
+plt.scatter(y, y_pred)
+
+# Regression / Reference Line
+plt.plot(
+    [y.min(), y.max()],
+    [y.min(), y.max()]
+)
+
+plt.xlabel("Actual Values")
+plt.ylabel("Predicted Values")
+plt.title("Actual vs Predicted with Regression Line")
+
+plt.show()import matplotlib.pyplot as plt
+______________________________________
+import numpy as np
+
+# Predicted values
+y_pred = model.predict(X)
+
+# Scatter plot
+plt.scatter(y_pred, y)
+
+# Regression line
+m, b = np.polyfit(y_pred, y, 1)
+
+x_line = np.array([y_pred.min(), y_pred.max()])
+y_line = m * x_line + b
+
+plt.plot(x_line, y_line, color='red')
+
+plt.xlabel("Predicted Values")
+plt.ylabel("Actual Values")
+plt.title("Actual vs Predicted with Regression Line")
+
+plt.show()
