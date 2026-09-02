@@ -4,6 +4,7 @@ Dataset lene ke baad:
 
 Dataset → Target identify → Numerical columns → Z-score → Outliers remove → X & y prepare
 
+__________________________________________________________________________________________
 1. DATASET UPLOAD 
 import pandas as pd
 
@@ -12,3 +13,58 @@ df = pd.read_csv('/content/california_housing_train.csv')
 
 # Display the first 5 rows of the DataFrame
 display(df.head())
+__________________________________________________________________________________________
+part-1
+# NumPy numerical calculations ke liye chahiye,
+# especially Z-score calculate karne ke liye.
+import numpy as np
+
+
+# STEP 2 — Target column select karo
+# California Housing dataset mein hum "median_house_value"
+# ko target maanenge, kyunki hum median house value predict karna chahte hain.
+t = "median_house_value"
+
+
+# STEP 3 — Numerical features select karo
+# Target column ko remove kar rahe hain, kyunki woh output/target hai.
+# select_dtypes(include=[np.number]) sirf numerical columns select karega.
+f = df.drop(columns=[t]).select_dtypes(include=[np.number])
+
+# df.drop(columns=[t]) → "median_house_value" ko hata diya.
+
+
+# STEP 4 — Z-score calculate karo
+# Ye har numerical column ki har value ka Z-score calculate karega.
+#
+# Formula:
+# Z = (X - μ) / σ
+#
+# Yahan:
+# X = actual value
+# μ = mean
+# σ = standard deviation
+#
+# np.abs() negative Z-score ko positive bana deta hai.
+z = np.abs((f - f.mean()) / f.std())
+
+
+# STEP 5 — Outliers remove karo
+# Hum check kar rahe hain ki Z-score 3 se chhota hai ya nahi.
+# Z < 3  → row keep hogi
+# Z >= 3 → row outlier hai aur remove hogi
+#
+# .all(axis=1) ka matlab hai ki row ke saare selected
+# numerical features ko Z < 3 ki condition satisfy karni hogi.
+df_clean = df[(z < 3).all(axis=1)]
+
+
+# STEP 6 — X prepare karo
+# X mein input/independent features aayenge.
+# "median_house_value" ko remove kar diya kyunki woh target hai.
+X = df_clean.drop(columns=[t]).values
+
+
+# STEP 7 — y prepare karo
+# y mein target/output variable "median_house_value" aayega.
+y = df_clean[t].values
