@@ -1,3 +1,9 @@
+OBJECTIVE:Overall hum kya kar rahe hain?
+
+Dataset lene ke baad:
+
+Dataset → Target identify → Numerical columns → Z-score → Outliers remove → X & y prepare
+
 1. DATASET UPLOAD 
 import pandas as pd
 
