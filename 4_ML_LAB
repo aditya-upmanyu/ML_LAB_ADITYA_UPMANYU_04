@@ -68,3 +68,52 @@ X = df_clean.drop(columns=[t]).values
 # STEP 7 — y prepare karo
 # y mein target/output variable "median_house_value" aayega.
 y = df_clean[t].values
+__________________________________________________________________________________
+part-2
+import numpy as np
+
+# Target column
+t = "median_house_value"
+
+# Select numerical features excluding target
+f = df.drop(columns=[t]).select_dtypes(include=[np.number])
+
+# Calculate Z-score
+z = np.abs((f - f.mean()) / f.std())
+
+# Remove outliers
+df_clean = df[(z < 3).all(axis=1)]
+
+# Prepare input features
+X = df_clean.drop(columns=[t]).values
+
+# Prepare target
+y = df_clean[t].values
+
+
+# Print results
+print("Original Dataset Shape:", df.shape)
+print("Cleaned Dataset Shape:", df_clean.shape)
+print("X Shape:", X.shape)
+print("y Shape:", y.shape)
+
+print("\nInput Features (X):")
+print(df_clean.drop(columns=[t]).columns.tolist())
+
+print("\nTarget Variable (y):")
+print(t)
+
+
+'''
+Original Dataset Shape → Outliers remove karne se pehle rows aur columns ki count.
+
+Cleaned Dataset Shape → Outliers remove karne ke baad rows aur columns ki count.
+
+X Shape → Input features (independent variables) ka size.
+
+y Shape → Target variable (dependent variable) ka size.
+
+Input Features (X) → Model ko diye jaane wale input columns.
+
+Target Variable (y) → Jis value ko model predict karega.
+'''
