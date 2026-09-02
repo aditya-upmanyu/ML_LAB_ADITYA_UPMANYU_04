@@ -1,0 +1,8 @@
+1. DATASET UPLOAD 
+import pandas as pd
+
+# Load the CSV file into a pandas DataFrame
+df = pd.read_csv('/content/california_housing_train.csv')
+
+# Display the first 5 rows of the DataFrame
+display(df.head())
