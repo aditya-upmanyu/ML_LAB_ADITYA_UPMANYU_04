@@ -1,0 +1,91 @@
+'''
+## 📌 Plot Part — Theory Summary
+
+### 1. Predicted Values
+
+```python
+y_pred = model.predict(X)
+```
+
+Trained Linear Regression model se predicted values obtain karte hain.
+
+* `y` → Actual values
+* `y_pred` → Predicted values
+
+---
+
+### 2. Scatter Plot
+
+```python
+plt.scatter(y_pred, y)
+```
+
+Actual aur predicted values ke relationship ko **dots/points** ke form mein show karta hai.
+
+* **X-axis** → Predicted Values
+* **Y-axis** → Actual Values
+
+---
+
+### 3. Regression Line
+
+```python
+m, b = np.polyfit(y_pred, y, 1)
+```
+
+`np.polyfit()` data points ke liye **best-fit straight line** ke slope (`m`) aur intercept (`b`) calculate karta hai.
+
+```python
+x_line = np.array([y_pred.min(), y_pred.max()])
+y_line = m * x_line + b
+```
+
+Ye regression line ke X aur Y coordinates generate karta hai.
+
+---
+
+### 4. Line Plot
+
+```python
+plt.plot(x_line, y_line, color='red')
+```
+
+Calculated regression line ko graph par draw karta hai.
+
+`color='red'` se line **red** दिखाई देती है.
+
+---
+
+### 5. Labels & Title
+
+```python
+plt.xlabel("Predicted Values")
+plt.ylabel("Actual Values")
+plt.title("Actual vs Predicted with Regression Line")
+```
+
+Graph ke X-axis, Y-axis aur title ko define karta hai.
+
+---
+
+### 6. Display Plot
+
+```python
+plt.show()
+```
+
+Complete graph ko display karta hai.
+
+### 🔑 Overall
+
+```text
+Predicted Values + Actual Values
+              ↓
+        Scatter Plot
+              ↓
+       Best-Fit Regression Line
+              ↓
+      Actual vs Predicted Graph
+```
+
+'''
