@@ -21,3 +21,23 @@ for col in df_encoded.columns:
 
 print("Encoded dataset for K-Means:")
 display(df_encoded.head())
+# Step 3: Perform K-Means Clustering
+# We will group the dataset into, for example, 3 clusters.
+kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)
+clusters = kmeans.fit_predict(df_encoded)
+
+# Step 4: Add cluster results to original DataFrame
+df['Cluster'] = clusters
+df_encoded['Cluster'] = clusters
+print("Dataset with predicted cluster labels:")
+display(df.head())
+# Step 5: Visualize the cluster output
+# We'll plot two features (e.g., outlook and temperature) to display the clusters
+plt.figure(figsize=(8, 5))
+plt.scatter(df_encoded.iloc[:, 0], df_encoded.iloc[:, 1], c=df_encoded['Cluster'], cmap='viridis', s=100, edgecolors='k')
+plt.title('K-Means Clustering on Play Tennis Dataset')
+plt.xlabel(df_encoded.columns[0])
+plt.ylabel(df_encoded.columns[1])
+plt.colorbar(label='Cluster ID')
+plt.grid(True, linestyle='--', alpha=0.5)
+plt.show()
