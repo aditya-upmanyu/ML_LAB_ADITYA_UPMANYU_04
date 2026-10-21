@@ -8,3 +8,16 @@ import matplotlib.pyplot as plt
 df = pd.read_csv('/content/play_tennis.csv')
 print("Dataset preview:")
 display(df.head())
+# Step 2: Preprocess the data
+# Since play_tennis dataset usually contains categorical features (outlook, temp, humidity, wind, play),
+# we need to encode them to numerical values for K-Means clustering.
+
+le = LabelEncoder()
+df_encoded = df.copy()
+
+for col in df_encoded.columns:
+    if df_encoded[col].dtype == 'object':
+        df_encoded[col] = le.fit_transform(df_encoded[col])
+
+print("Encoded dataset for K-Means:")
+display(df_encoded.head())
