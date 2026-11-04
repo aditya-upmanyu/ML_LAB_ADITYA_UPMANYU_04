@@ -1,0 +1,66 @@
+Gaussian Naive Bayes Classification on Iris Dataset
+Is notebook mein hum Python aur scikit-learn ka use karke Iris dataset par ek Naive Bayes classifier banayenge. Hum step-by-step is poore process ko samjhenge.
+
+
+[1]
+2s
+# 1. Required Libraries aur Dataset load karna
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+import pandas as pd
+
+# Iris dataset ko sklearn se load kar rahe hain
+iris = load_iris()
+X = iris.data
+y = iris.target
+
+# Features aur Target classes ke naam dekhne ke liye
+print("Features (Pehle 5 rows):\n", X[:5])
+print("Target Classes:", iris.target_names)
+Step 2: Data Splitting
+Ab hum data ko Training Set (80%) aur Testing Set (20%) mein split karenge taaki hum model ki performance ko test kar sakein. random_state=42 ka use kiya hai taaki result reproducible rahe.
+
+
+# Data ko Train aur Test sets mein split karna (80:20 ratio)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+print(f"Training set shape: {X_train.shape}")
+print(f"Testing set shape: {X_test.shape}")
+# Gaussian Naive Bayes model ko initialize aur train karna
+model = GaussianNB()
+model.fit(X_train, y_train)
+
+# Test set par predictions banana
+y_pred = model.predict(X_test)
+print("Predictions completed successfully!")
+Step 4: Model Evaluation
+Hum accuracy, confusion matrix, aur detailed classification report print karke model ki performance evaluate karenge.
+
+
+# Performance metrics calculate aur print karna
+accuracy = accuracy_score(y_test, y_pred)
+conf_matrix = confusion_matrix(y_test, y_pred)
+# Yahan y_pred argument add kiya hai error fix karne ke liye
+class_report = classification_report(y_test, y_pred, target_names=iris.target_names)
+
+print(f"Accuracy: {accuracy * 100:.2f}%")
+print("\nConfusion Matrix:\n", conf_matrix)
+print("\nClassification Report:\n", class_report)
+
+
+# Ek single test sample lena (pehla sample from test set)
+sample_features = X_test[0].reshape(1, -1)
+actual_label = y_test[0]
+
+# Model se predict karwana
+predicted_label = model.predict(sample_features)[0]
+
+# Target names (species) map karna
+actual_species = iris.target_names[actual_label]
+predicted_species = iris.target_names[predicted_label]
+
+print(f"Test Sample Features: {X_test[0]}")
+print(f"Actual Species: {actual_species}")
+print(f"Predicted Species: {predicted_species}")
