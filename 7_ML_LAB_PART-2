@@ -1,0 +1,67 @@
+# Step 1: Libraries import karna aur dataset load karna
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+# Yahan hum 'SMSSpamCollection' file ko read kar rahe hain. 
+# Dataset mein koi header nahi hai aur values tab (\t) se separated hain, 
+# isliye humne column names 'label' (spam/ham) aur 'message' khud diye hain.
+df = pd.read_csv('/content/SMSSpamCollection', sep='\t', names=['label', 'message'])
+
+# Step 2: Data ko Features (X) aur Target (y) mein divide karna
+X = df['message'] # X mein saare SMS text aayenge
+y = df['label']   # y mein unke labels (spam ya ham) aayenge
+
+# Step 3: Data ko Train aur Test sets mein split karna
+# Hum data ka 80% training ke liye aur 20% testing ke liye use kar rahe hain.
+# 'stratify=y' ensures ki train aur test dono mein spam/ham ka ratio same rahe.
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42, stratify=y)
+
+# Step 4: Text data ko numbers (vectors) mein convert karna
+# Machine learning models text nahi samajhte, isliye hum CountVectorizer use kar rahe hain 
+# jo words ko count karke numerical data mein badal dega.
+vectorizer = CountVectorizer()
+
+# Training data par fit aur transform karte hain
+X_train_vectorized = vectorizer.fit_transform(X_train)
+# Testing data par sirf transform karte hain (taki model nayi words ko ignore kare)
+X_test_vectorized = vectorizer.transform(X_test)
+
+# Step 5: Model ko initialize aur train karna
+# Hum yahan Multinomial Naive Bayes model use kar rahe hain, jo text classification ke liye best hota hai.
+model = MultinomialNB()
+model.fit(X_train_vectorized, y_train) # Model ko train kiya
+
+# Step 6: Test data par predictions karna aur results check karna
+y_pred = model.predict(X_test_vectorized) # 20% test data par predictions lagaye
+
+# Accuracy aur report print karna taaki pata chale model kitna achha perform kar raha hai
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy Score: {accuracy:.4f}\n")
+
+print("Confusion Matrix (Sahi aur Galat predictions ka count):")
+print(confusion_matrix(y_test, y_pred))
+
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+
+# Step 7: Naye SMS messages par model ko test karna (Sample Prediction)
+# Ab hum khud ke 2 messages dekar check kar rahe hain ki model inhe spam batata hai ya ham.
+sample_messages = [
+    "URGENT! You have won a 1-week free membership to our services. Call now to claim!",
+    "Hey, are we still meeting for lunch today at 1 PM?"
+]
+
+# Naye messages ko bhi vectorizer se numbers mein convert karna hoga
+sample_vectorized = vectorizer.transform(sample_messages)
+
+# Predictions nikalna
+predictions = model.predict(sample_vectorized)
+
+# Output dikhana
+print("\n--- Custom SMS Predictions ---")
+for msg, pred in zip(sample_messages, predictions):
+    print(f"Message: '{msg}'")
+    print(f"Prediction: -> {pred.upper()} \n")
