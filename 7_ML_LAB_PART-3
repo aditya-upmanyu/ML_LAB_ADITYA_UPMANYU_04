@@ -1,0 +1,139 @@
+Yeh lijiye is poore Mushroom Classification project ke step-wise notes aur commented code. Ise aap ek complete script ya reference ke roop mein use kar sakte hain.
+
+### **Project: Mushroom Classification using Bernoulli Naive Bayes**
+
+#### **Step 1: Dataset Loading & Cleaning**
+
+**Explanation:** UCI Mushroom dataset mein column names nahi hote aur missing values `?` ke form mein hoti hain. Hum sabse pehle columns ke naam define karte hain, `?` ko `NaN` banate hain, aur phir `stalk-root` column ki missing values ko uske **mode** (sabse zyada aane wali value) se fill karte hain.
+
+```python
+import pandas as pd
+import numpy as np
+
+# 1. Dataset ke columns define karna
+columns = [
+    'class', 'cap-shape', 'cap-surface', 'cap-color', 'bruises', 'odor',
+    'gill-attachment', 'gill-spacing', 'gill-size', 'gill-color',
+    'stalk-shape', 'stalk-root', 'stalk-surface-above-ring',
+    'stalk-surface-below-ring', 'stalk-color-above-ring',
+    'stalk-color-below-ring', 'veil-type', 'veil-color', 'ring-number',
+    'ring-type', 'spore-print-color', 'population', 'habitat'
+]
+
+# 2. Dataset load karna ('?' ko missing value/NaN mankar)
+filepath = '/content/agaricus-lepiota.data'
+df_mushrooms = pd.read_csv(filepath, header=None, names=columns, na_values='?')
+
+# 3. Missing values handle karna
+# 'stalk-root' mein missing values hain, isliye usko mode (most frequent value) se replace kar rahe hain
+df_mushrooms['stalk-root'] = df_mushrooms['stalk-root'].fillna(df_mushrooms['stalk-root'].mode()[0])
+
+print(f"Dataset Shape: {df_mushrooms.shape}")
+
+```
+
+#### **Step 2: Target (y) aur Features (X) Split & One-Hot Encoding**
+
+**Explanation:** Machine learning models strings (jaise 'e', 'p') ko direct nahi samajhte. Bernoulli Naive Bayes model binary data (0/1) par best kaam karta hai. Isliye hum features ko `pd.get_dummies` ka use karke One-Hot Encode karte hain, jisse har category ek alag binary column (True/False ya 0/1) ban jati hai.
+
+```python
+# 1. Target column ('class') ko alag karna
+y = df_mushrooms['class'] # 'e' = edible, 'p' = poisonous
+X = df_mushrooms.drop(columns=['class']) # Baki sab features hain
+
+# 2. One-Hot Encoding (Categorical data ko Binary mein convert karna)
+X_encoded = pd.get_dummies(X)
+
+print(f"Original features: {X.shape[1]}")
+print(f"Encoded binary features: {X_encoded.shape[1]}")
+
+```
+
+#### **Step 3: Train-Test Split & Model Training**
+
+**Explanation:** Dataset ko 2 hisson mein baanta jata hai: 80% model ko train karne ke liye aur 20% uski accuracy test karne ke liye. Hum yahan Bernoulli Naive Bayes model use kar rahe hain.
+
+```python
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import BernoulliNB
+
+# 1. Data ko 80% (Train) aur 20% (Test) ratio mein split karna
+# stratify=y ensure karta hai ki train aur test dono mein edible/poisonous ka ratio maintain rahe
+X_train, X_test, y_train, y_test = train_test_split(
+    X_encoded, y, test_size=0.20, random_state=42, stratify=y
+)
+
+# 2. Model ko initialize aur train (fit) karna
+model = BernoulliNB()
+model.fit(X_train, y_train)
+
+print("Model successfully train ho gaya hai!")
+
+```
+
+#### **Step 4: Model Evaluation & Sample Prediction**
+
+**Explanation:** Model train hone ke baad, hum Test dataset par predictions karte hain. Accuracy score, confusion matrix, aur classification report se humein pata chalta hai ki model kitna accha perform kar raha hai.
+
+```python
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+# 1. Test data par predictions banana
+y_pred = model.predict(X_test)
+
+# 2. Model ka evaluation check karna
+accuracy = accuracy_score(y_test, y_pred)
+conf_matrix = confusion_matrix(y_test, y_pred)
+class_report = classification_report(y_test, y_pred)
+
+print(f"Model Accuracy: {accuracy * 100:.2f}%")
+print("\nClassification Report:\n", class_report)
+
+# 3. Ek sample test karke dekhna (e.g., Pehla test record)
+sample_mush = X_test.iloc[[0]]
+sample_actual = y_test.iloc[0]
+sample_pred = model.predict(sample_mush)[0]
+
+label_map = {'e': 'Edible', 'p': 'Poisonous'}
+print(f"\nSample Prediction - Actual: {label_map[sample_actual]}, Predicted: {label_map[sample_pred]}")
+
+```
+
+#### **Step 5: Visualizations**
+
+**Explanation:** Model results ko visually samajhne ke liye 2 plots banaye jate hain. Pehla, Confusion Matrix jo galat/sahi predictions ka map dikhata hai. Doosra, Top 10 Features jo Poisonous mushrooms ke sath sabse strongly associated hain (Log probabilities ka use karke). *Note: FutureWarning se bachne ke liye barplot mein `hue` parameter add kiya gaya hai.*
+
+```python
+import matplotlib.pyplot import plt
+import seaborn as sns
+
+# --- Plot 1: Confusion Matrix ---
+plt.figure(figsize=(6, 5))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', 
+            xticklabels=['Edible (e)', 'Poisonous (p)'], 
+            yticklabels=['Edible (e)', 'Poisonous (p)'])
+plt.title('Confusion Matrix')
+plt.ylabel('Actual')
+plt.xlabel('Predicted')
+plt.show()
+
+# --- Plot 2: Top Features associated with Poisonous Mushrooms ---
+# Index 1 corresponds to 'p' (poisonous) log probabilities
+poisonous_features_prob = model.feature_log_prob_[1] 
+features_importance = pd.Series(poisonous_features_prob, index=X_encoded.columns).sort_values(ascending=False)
+
+plt.figure(figsize=(10, 6))
+# Future warning ko fix karne ke liye hue aur legend=False add kiya gaya hai
+sns.barplot(
+    x=features_importance.head(10).values, 
+    y=features_importance.head(10).index, 
+    hue=features_importance.head(10).index,
+    palette='flare',
+    legend=False
+)
+plt.title('Top 10 Features strongly associated with Poisonous Mushrooms (Log Probs)')
+plt.xlabel('Log Probability')
+plt.ylabel('Features')
+plt.show()
+
+```
